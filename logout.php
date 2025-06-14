@@ -1,25 +1,14 @@
 <?php
-session_start();
-
-// Hapus semua data sesi
-$_SESSION = [];
-
-// Hapus session cookie (jika diset)
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(
-        session_name(),
-        '',
-        time() - 42000,
-        $params["path"],
-        $params["domain"],
-        $params["secure"],
-        $params["httponly"]
-    );
+// Hapus semua cookie yang tersimpan di browser
+if (!empty($_SERVER['HTTP_COOKIE'])) {
+    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+    foreach ($cookies as $cookie) {
+        $parts = explode('=', $cookie);
+        $name = trim($parts[0]);
+        setcookie($name, '', time() - 3600, '/');
+        setcookie($name, '', time() - 3600, '/', $_SERVER['HTTP_HOST'], false, true); // httponly
+    }
 }
-
-// Hancurkan sesi
-session_destroy();
 
 // Redirect ke halaman login
 header("Location: login.php");

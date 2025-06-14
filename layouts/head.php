@@ -9,7 +9,15 @@ function getDomainUrl() {
 
 $base = getDomainUrl(); // untuk kemudahan penggunaan di bawah
 
-if ($base == ''){
+function isActive($path = '') {
+    $currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    if ($path == '') {
+        return $currentPath === '' ? 'active' : '';
+    }
+    return strpos($currentPath, $path) !== false ? 'active' : '';
+}
+
+if (!strpos($base, 'login')){
 include __DIR__ . '/../config/middleware.php';
 }
 ?>

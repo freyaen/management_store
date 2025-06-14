@@ -1,8 +1,8 @@
 <?php
-$host = "mysql.railway.internal";
+$host = "localhost";
 $user = "root";
-$pass = "ECSUEfPJSTyGRjeIXyRQkcSligREPJmY";
-$db   = "railway";
+$pass = "";
+$db   = "management_store";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 if (!$conn) {

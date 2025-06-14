@@ -1,6 +1,14 @@
 <?php
 include 'config/database.php';
 
+// Cek apakah user sudah login menggunakan cookie
+if (isset($_COOKIE['user_id'])) {
+    // Jika tidak, redirect ke login
+    $route =  "Location: index.php";
+    header($route);
+    exit;
+}
+
 $error = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
