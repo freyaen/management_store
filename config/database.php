@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
 $user = "root";
-$pass = "";
-$db   = "management_store";
+$pass = "ECSUEfPJSTyGRjeIXyRQkcSligREPJmY";
+$db   = "railway";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 if (!$conn) {
