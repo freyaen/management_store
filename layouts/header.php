@@ -1,6 +1,4 @@
 <?php 
-include __DIR__ . '/../config/middleware.php';
-
 $userName = $_COOKIE['name'] ?? '';
 $userRoleName = $_COOKIE['role_name'] ?? '';
 ?>
@@ -28,18 +26,14 @@ $userRoleName = $_COOKIE['role_name'] ?? '';
                 <!-- Optional: Add search bar or breadcrumbs here -->
             </div>
             <div class="header-body-right">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" title="User menu" data-toggle="dropdown">
+                <ul class="navbar-nav ">
+                    <li class="nav-item d-flex">
+                        <a href="#" class="nav-link" title="User menu" data-toggle="dropdown">
                             <span class="ml-2 d-sm-inline d-none">
                                 <?= $userName ?> (<?= $userRoleName ?>)
                             </span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a href="<?= getDomainUrl() . 'logout.php' ?>" class="dropdown-item text-danger">
-                                Logout
-                            </a>
-                        </div>
+                        <a href="<?= getDomainUrl() . 'logout.php' ?>" class="btn btn-danger btn-small"><i class='bx bx-log-out-circle text-white' ></i></a>
                     </li>
                 </ul>
             </div>

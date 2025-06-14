@@ -1,3 +1,5 @@
+
+
 <?php 
 function getDomainUrl() {
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
@@ -6,6 +8,10 @@ function getDomainUrl() {
 }
 
 $base = getDomainUrl(); // untuk kemudahan penggunaan di bawah
+
+if ($base == ''){
+include __DIR__ . '/../config/middleware.php';
+}
 ?>
 
 <!doctype html>
@@ -26,7 +32,6 @@ $base = getDomainUrl(); // untuk kemudahan penggunaan di bawah
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="<?= $base ?>/assets/css/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-   
 </head>
 
 <body class="horizontal-navigation" >
