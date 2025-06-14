@@ -1,5 +1,5 @@
 <?php
-$host = "localhost";
+$host = "mysql.railway.internal";
 $user = "root";
 $pass = "ECSUEfPJSTyGRjeIXyRQkcSligREPJmY";
 $db   = "railway";
