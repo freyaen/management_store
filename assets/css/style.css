@@ -1,0 +1,23 @@
+.content {
+    overflow: auto !important;
+}
+
+/* Hanya sembunyikan tampilan scrollbar, scroll tetap bisa */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    opacity: 0;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0); /* Transparan */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.navigation {
+    z-index: 9999 !important;
+}
