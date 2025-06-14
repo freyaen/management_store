@@ -1,16 +1,27 @@
-<?php ob_start(); // Start output buffering at very top
-
+<?php
 // Skip authentication for login page
 $currentFile = basename($_SERVER['SCRIPT_NAME']);
 if ($currentFile === 'login.php') {
-    ob_end_flush(); // Clean buffer before exit
     exit;
 }
 
+// Validate session existence
 if (!isset($_COOKIE['user_id'])) {
-    header("Location: " . getDomainUrl() . "login.php");
-    ob_end_clean(); // Discard any output
+    // Ensure no output before header
+    if (headers_sent()) {
+        die("Redirect failed - headers already sent");
+    }
+    
+    // Use absolute URL for redirect
+    $loginUrl = getDomainUrl() . "login.php";
+    header("Location: $loginUrl");
     exit;
 }
-ob_end_flush(); // Release buffer content
-?>
+
+// Validate session integrity (add this)
+$user_id = $_COOKIE['user_id'];
+if (!is_numeric($user_id)) {
+    setcookie('user_id', '', time() - 3600, '/');
+    header("Location: " . getDomainUrl() . "login.php?error=invalid_session");
+    exit;
+}

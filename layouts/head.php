@@ -1,15 +1,22 @@
 
 
 <?php 
+// Get absolute path to config directory
+$configPath = realpath(__DIR__ . '/../config');
+$middlewarePath = $configPath . '/middleware.php';
+
 // Define public pages that don't require authentication
-$whitelist = ['login.php']; 
+$whitelist = ['login.php', 'forgot-password.php']; 
 $currentFile = basename($_SERVER['SCRIPT_NAME']);
 
 // Only include middleware for PROTECTED pages
 if (!in_array($currentFile, $whitelist)) {
-    include __DIR__ . '/../config/middleware.php';
+    if (file_exists($middlewarePath)) {
+        include $middlewarePath;
+    } else {
+        trigger_error("Middleware file missing: $middlewarePath", E_USER_WARNING);
+    }
 }
-
 function getDomainUrl() {
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
