@@ -12,9 +12,17 @@ if (!in_array($currentFile, $whitelist)) {
 
 function getDomainUrl() {
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+
+    // Jika localhost, gunakan http
+    if ($host === 'localhost' || strpos($host, '127.0.0.1') === 0) {
+        $protocol = 'http://';
+    } else {
+        $protocol = 'https://';
+    }
+
     return rtrim($protocol . $host, '/') . '/';
 }
+
 
 $base = getDomainUrl(); // untuk kemudahan penggunaan di bawah
 
