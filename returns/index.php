@@ -75,7 +75,7 @@ $returns = mysqli_query($conn, "
                                                 class="btn btn-sm btn-info" title="View Detail">
                                                 <i class='text-white bx bx-show'></i>
                                             </a>
-                                            <?php if($return['status'] == 'ditolak') :?>
+                                            <?php if($userRole == 2 && $return['status'] == 'ditolak') :?>
                                             <a href="<?= getDomainUrl() . 'returns/edit.php?id=' . $return['id'] ?>"
                                                 class="btn btn-sm btn-warning" title="Edit">
                                                 <i class='text-white bx bx-edit'></i>

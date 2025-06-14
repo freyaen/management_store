@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Hapus detail produk lama
         $conn->query("DELETE FROM request_details WHERE request_id = $id");
 
-        $conn->query("UPDATE requests SET request_status = 'menunggu' WHERE id = $id");
+        $conn->query("UPDATE requests SET request_status = 'menunggu', reject_reason = null WHERE id = $id");
         
         // Simpan detail produk baru
         $total_price = 0;

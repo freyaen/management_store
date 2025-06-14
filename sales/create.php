@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
 
                             <button type="submit" class="btn btn-primary">
-                                Save Sale
+                                Save
                             </button>
                             <a href="index.php" class="btn btn-secondary">
                                 Cancel

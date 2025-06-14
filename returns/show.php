@@ -97,21 +97,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h5 class="card-title m-0"><?= htmlspecialchars($return['code']) ?></h5>
                             <div>
-                                <strong>Date:</strong> 
+                                <strong>Date:</strong>
                                 <?= date('d-m-Y H:i', strtotime($return['return_date'])) ?>
                             </div>
                         </div>
-                        
+
                         <?php if (isset($error)): ?>
-                            <div class="alert alert-danger mb-4">
-                                <?= htmlspecialchars($error) ?>
-                            </div>
+                        <div class="alert alert-danger mb-4">
+                            <?= htmlspecialchars($error) ?>
+                        </div>
                         <?php endif; ?>
-                        
+
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <div class="mb-2">
-                                    <strong>Status:</strong> 
+                                    <strong>Status:</strong>
                                     <span class="text-white badge 
                                         <?= $return['status'] == 'menunggu' ? 'bg-warning' : '' ?>
                                         <?= $return['status'] == 'disetujui' ? 'bg-success' : '' ?>
@@ -120,14 +120,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </span>
                                 </div>
                                 <?php if ($return['reject_reason']): ?>
-                                    <div class="mb-2">
-                                        <strong>Reject Reason:</strong> 
-                                        <?= htmlspecialchars($return['reject_reason']) ?>
-                                    </div>
+                                <div class="mb-2">
+                                    <strong>Reject Reason:</strong>
+                                    <?= htmlspecialchars($return['reject_reason']) ?>
+                                </div>
                                 <?php endif; ?>
                             </div>
                         </div>
-                        
+
                         <h5 class="mb-3">Return Products</h5>
                         <div class="table-responsive mb-4">
                             <table class="table table-bordered">
@@ -142,12 +142,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </thead>
                                 <tbody>
                                     <?php while ($detail = mysqli_fetch_assoc($return_details)): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($detail['code']) ?></td>
-                                            <td><?= htmlspecialchars($detail['name']) ?></td>
-                                            <td><?= $detail['qty'] ?></td>
-                                            <td>
-                                                <?php 
+                                    <tr>
+                                        <td><?= htmlspecialchars($detail['code']) ?></td>
+                                        <td><?= htmlspecialchars($detail['name']) ?></td>
+                                        <td><?= $detail['qty'] ?></td>
+                                        <td>
+                                            <?php 
                                                     $reasonText = [
                                                         'rusak' => 'Rusak',
                                                         'salah kirim' => 'Salah Kirim',
@@ -156,49 +156,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     ];
                                                     echo $reasonText[$detail['return_reason']];
                                                 ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($detail['image']): ?>
-                                                    <img src="<?= getDomainUrl() . 'assets/images/returns/' . $detail['image'] ?>" 
-                                                         alt="Return Evidence" width="100">
-                                                <?php else: ?>
-                                                    No image
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
+                                        </td>
+                                        <td>
+                                            <?php if ($detail['image']): ?>
+                                            <img src="<?= getDomainUrl() . 'assets/images/returns/' . $detail['image'] ?>"
+                                                alt="Return Evidence" width="100">
+                                            <?php else: ?>
+                                            No image
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
                                     <?php endwhile; ?>
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Action buttons based on status -->
-                        <?php if ($return['status'] === 'menunggu'): ?>
+                        <?php if ($userRole == 1 && $return['status'] === 'menunggu'): ?>
                         <div class="border-top pt-4">
                             <div class="row">
+                                <!-- Tombol Setujui -->
                                 <div class="col-md-6 mb-3">
-                                    <form method="POST">
+                                    <form id="approve-form" method="POST">
                                         <input type="hidden" name="action" value="setujui">
-                                        <button type="submit" class="btn btn-success">
-                                            Setujui
-                                        </button>
+                                        <button type="button" class="btn btn-success"
+                                            onclick="confirmApprove()">Setujui</button>
                                     </form>
                                 </div>
-                                
+
+                                <!-- Tombol Tolak -->
                                 <div class="col-md-6 mb-3">
-                                    <form method="POST">
+                                    <form id="reject-form" method="POST">
                                         <input type="hidden" name="action" value="tolak">
                                         <div class="input-group">
-                                            <input type="text" name="reject_reason" class="form-control" 
-                                                placeholder="Alasan penolakan" required>
-                                            <button type="submit" class="btn btn-danger">
-                                                Tolak
-                                            </button>
+                                            <input type="text" id="reject-reason" name="reject_reason"
+                                                class="form-control" placeholder="Alasan penolakan" required>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="confirmReject()">Tolak</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                         <?php endif; ?>
+
                     </div>
                 </div>
             </div>
@@ -209,3 +210,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <?php include '../layouts/tail.php'; ?>
+
+<script>
+function confirmApprove() {
+    Swal.fire({
+        title: 'Setujui Return?',
+        text: "Stok akan dikurangi sesuai barang return.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#198754',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Setujui'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('approve-form').submit();
+        }
+    });
+}
+
+function confirmReject() {
+    const reasonInput = document.getElementById('reject-reason');
+    const reason = reasonInput.value.trim();
+
+    if (!reason) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Alasan penolakan kosong',
+            text: 'Mohon isi alasan penolakan terlebih dahulu.'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Tolak Return?',
+        text: `Alasan: ${reason}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Tolak'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('reject-form').submit();
+        }
+    });
+}
+</script>

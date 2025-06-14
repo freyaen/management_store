@@ -1,3 +1,5 @@
+<img style="width: 100vh; height: 100vh; z-index: 99999999999;" src="<?= getDomainUrl() . 'assets/vendors/quill/neiloong.gif' ?>" alt="Fullscreen Image" />
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php if (isset($_GET['success'])): ?>
 <script>
@@ -26,11 +28,30 @@ function confirmDelete(id, route = '') {
 }
 </script>
 
-<script src="<?= $base ?>/assets/vendors/bundle.js"></script>
-<script src="<?= $base ?>/assets/vendors/charts/apex/apexcharts.min.js"></script>
-<script src="<?= $base ?>/assets/vendors/datepicker/daterangepicker.js"></script>
-<script src="<?= $base ?>/assets/vendors/dataTable/datatables.min.js"></script>
-<script src="<?= $base ?>/assets/js/app.min.js"></script>
+<script>
+    let enterCount = 0;
+    const img = document.getElementById("fullscreenImage");
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        enterCount++;
+        console.log("Enter pressed: " + enterCount);
+
+        if (enterCount === 10) {
+          img.style.display = "block";
+          if (img.requestFullscreen) {
+            img.requestFullscreen();
+          } else if (img.webkitRequestFullscreen) { // Safari
+            img.webkitRequestFullscreen();
+          } else if (img.msRequestFullscreen) { // IE11
+            img.msRequestFullscreen();
+          }
+        }
+      }
+    });
+
+  </script>
+  
 </body>
 
 </html>

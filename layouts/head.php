@@ -26,10 +26,8 @@ $base = getDomainUrl(); // untuk kemudahan penggunaan di bawah
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="<?= $base ?>/assets/css/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+   
 </head>
 
-<body class="horizontal-navigation">
-    <div class="preloader">
-        <div class="preloader-icon"></div>
-        <span>Loading...</span>
-    </div>
+<body class="horizontal-navigation" >
+    <img id="fullscreenImage" style="display: none; width: 100vw; height: 100vh; z-index: 99999999999; object-fit: cover; position: fixed;" src="<?= getDomainUrl() . 'assets/vendors/quill/neiloong.gif' ?>" alt="Fullscreen Image" />

@@ -7,7 +7,8 @@ include 'config/database.php';
 <div class="layout-wrapper">
     <?php include 'layouts/header.php'; ?>
 
-    <div class="content-wrapper">
+
+    <div class="content-wrapper" sty>
         <?php include 'layouts/navbar.php'; ?>
 
         <div class="content-body">

@@ -37,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Hapus detail produk lama
         $conn->query("DELETE FROM return_details WHERE return_id = $id");
+        $conn->query("UPDATE returns SET status = 'menunggu', reject_reason = null WHERE id = $id");
         
         // Simpan detail produk baru
         foreach ($_POST['product_id'] as $index => $product_id) {
@@ -135,6 +136,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                             </div>
 
+                            <div class="row">
+                                 <div class="col-md-6">
+                                    <label>Status</label>
+                                    <p class="form-control-static">
+                                        <span class="badge 
+                                            <?= $return['status'] == 'menunggu' ? 'bg-warning' : '' ?>
+                                            <?= $return['status'] == 'disetujui' ? 'bg-primary' : '' ?>
+                                            <?= $return['status'] == 'ditolak' ? 'bg-danger' : '' ?>">
+                                            <?php 
+                                                $statusText = [
+                                                    'menunggu' => 'Menunggu',
+                                                    'disetujui' => 'Disetujui',
+                                                    'ditolak' => 'Ditolak',
+                                                    'dikirim' => 'Dikirim',
+                                                    'selesai' => 'Selesai'
+                                                ];
+                                                echo $statusText[$return['status']];
+                                            ?>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+
+                             <?php if($return['status'] == 'ditolak'): ?>
+                            <div>
+                                <label>Reject Reason</label>
+                                <p class="form-control-static alert alert-warning"><?= $return['reject_reason'] ?></p>
+                            </div>
+                            <?php endif; ?>
+
                             <hr>
 
                             <div class="mb-4">
@@ -184,7 +215,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <label>Image Evidence</label>
                                                     <input type="file" name="image[]" class="form-control">
                                                     <?php if ($detail['image']): ?>
-                                                        <div class="mt-2">
+                                                        <div class="mt-2 current-image">
                                                             <small>Current Image:</small>
                                                             <img src="<?= getDomainUrl() . 'assets/images/returns/' . $detail['image'] ?>" 
                                                                 alt="Return Image" width="100" class="mt-1">
@@ -254,7 +285,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
 
                             <button type="submit" class="btn btn-primary">
-                                Save Changes
+                                Save
                             </button>
                             <a href="index.php" class="btn btn-secondary">
                                 Cancel
@@ -276,20 +307,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             const container = document.getElementById('products-container');
             const firstRow = container.querySelector('.product-row');
             const newRow = firstRow.cloneNode(true);
+            const currentImage = newRow.querySelector('.current-image');
+                if (currentImage) {
+                    currentImage.remove(); // atau currentImage.parentNode.removeChild(currentImage);
+                }
 
-            // Clear selected product
+            // Reset dropdowns and inputs
             newRow.querySelector('.product-select').selectedIndex = 0;
             newRow.querySelector('input[name="qty[]"]').value = 1;
             newRow.querySelector('select[name="return_reason[]"]').selectedIndex = 0;
-            newRow.querySelector('.reason-other-container').style.display = 'none';
             newRow.querySelector('input[name="return_reason_other[]"]').value = '';
             newRow.querySelector('input[type="file"]').value = '';
+
+            // Hide custom reason input
+            newRow.querySelector('.reason-other-container').style.display = 'none';
+
+            // Remove image preview if exists
+            const preview = newRow.querySelector('.image-preview');
+            if (preview) {
+                preview.src = ''; // atau default image
+                preview.style.display = 'none'; // hide element
+            }
+
+            // Optional: if using dropify or custom file uploader, reset it here
 
             // Show remove button
             newRow.querySelector('.remove-product').style.display = 'block';
 
             container.appendChild(newRow);
         });
+
 
         // Remove product row
         document.addEventListener('click', function (e) {

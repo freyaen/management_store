@@ -162,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <?= $paymentText[$request['payment_status']] ?>
                                     </span>
                                 </div>
-                                <?php if ($request['reject_reason']): ?>
+                                <?php if ($request['request_status'] == 'ditolak'): ?>
                                 <div class="mb-2">
                                     <strong>Reject Reason:</strong>
                                     <?= htmlspecialchars($request['reject_reason']) ?>
@@ -207,66 +207,74 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="border-top pt-4">
                             <div class="row">
                                 <?php if ($userRole == 1 && $request['request_status'] === 'menunggu'): ?>
+                                <!-- SETUJUI -->
                                 <div class="col-md-6 mb-3">
-                                    <form method="POST">
+                                    <form id="approve-form" method="POST">
                                         <input type="hidden" name="action" value="setujui">
-                                        <button type="submit" class="btn btn-success">
-                                            Setujui
-                                        </button>
+                                        <button type="button" class="btn btn-success"
+                                            onclick="confirmApprove()">Setujui</button>
                                     </form>
                                 </div>
 
+                                <!-- TOLAK -->
                                 <div class="col-md-6 mb-3">
-                                    <form method="POST">
+                                    <form id="reject-form" method="POST">
                                         <input type="hidden" name="action" value="tolak">
                                         <div class="input-group">
-                                            <input type="text" name="reject_reason" class="form-control"
-                                                placeholder="Alasan penolakan" required>
-                                            <button type="submit" class="btn btn-danger">
-                                                Tolak
-                                            </button>
+                                            <input type="text" name="reject_reason" id="reject_reason"
+                                                class="form-control" placeholder="Alasan penolakan" required>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="confirmReject()">Tolak</button>
                                         </div>
                                     </form>
                                 </div>
                                 <?php endif; ?>
 
                                 <?php if ($userRole == 2 && $request['request_status'] === 'disetujui' && $request['payment_status'] === 'belum dibayar'): ?>
-                                <div class="col-md-6 mb-3">
-                                    <form method="POST">
+                                <!-- PEMBAYARAN -->
+                                <div class="col-md-6 mb-3 d-flex">
+                                    <?php 
+                                    // Tampilkan tombol jika status disetujui atau setelahnya
+                                    $showInvoiceButton = in_array($request['request_status'], ['disetujui', 'dikirim', 'selesai']);
+                                    ?>
+                                        <?php if ($showInvoiceButton): ?>
+                                        <a href="invoice.php?id=<?= $id ?>" target="_blank" class="btn btn-danger ">
+                                            </i> Lihat Invoice
+                                        </a>
+                                    <?php endif; ?>
+                                    <form id="pay-form" method="POST" class="ml-2">
                                         <input type="hidden" name="action" value="pembayaran">
-                                        <div class="input-group">
-                                            <input type="hidden" name="payment_status" value="sudah dibayar">
-                                            <button type="submit" class="btn btn-primary">
-                                                Bayar
-                                            </button>
-                                        </div>
+                                        <input type="hidden" name="payment_status" value="sudah dibayar">
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="confirmPay()">Bayar</button>
                                     </form>
-                                </div>
+                                    </div>
                                 <?php endif; ?>
 
                                 <?php if ($userRole == 1 && $request['request_status'] === 'disetujui' && $request['payment_status'] === 'sudah dibayar'): ?>
+                                <!-- KIRIM -->
                                 <div class="col-md-6 mb-3">
-                                    <form method="POST">
+                                    <form id="send-form" method="POST">
                                         <input type="hidden" name="action" value="kirim">
-                                        <button type="submit" class="btn btn-info">
-                                            Kirim
-                                        </button>
+                                        <button type="button" class="btn btn-info"
+                                            onclick="confirmSend()">Kirim</button>
                                     </form>
                                 </div>
                                 <?php endif; ?>
 
                                 <?php if ($userRole == 2 && $request['request_status'] === 'dikirim'): ?>
+                                <!-- SELESAI -->
                                 <div class="col-md-6 mb-3">
-                                    <form method="POST">
+                                    <form id="done-form" method="POST">
                                         <input type="hidden" name="action" value="selesai">
-                                        <button type="submit" class="btn btn-success">
-                                            Selesai
-                                        </button>
+                                        <button type="button" class="btn btn-success"
+                                            onclick="confirmDone()">Selesai</button>
                                     </form>
                                 </div>
                                 <?php endif; ?>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -277,3 +285,90 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <?php include '../layouts/tail.php'; ?>
+
+<script>
+    function confirmApprove() {
+        Swal.fire({
+            title: 'Setujui Permintaan?',
+            text: "Anda yakin ingin menyetujui request ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Setujui'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('approve-form').submit();
+            }
+        });
+    }
+
+    function confirmReject() {
+        const reason = document.getElementById('reject_reason').value;
+        if (!reason.trim()) {
+            Swal.fire('Alasan wajib diisi', 'Masukkan alasan penolakan terlebih dahulu.', 'warning');
+            return;
+        }
+        Swal.fire({
+            title: 'Tolak Permintaan?',
+            text: "Request akan ditolak dengan alasan: " + reason,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Tolak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('reject-form').submit();
+            }
+        });
+    }
+
+    function confirmPay() {
+        Swal.fire({
+            title: 'Lanjutkan Pembayaran?',
+            text: "Status akan diubah menjadi 'Sudah Dibayar'.",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#0d6efd',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Bayar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('pay-form').submit();
+            }
+        });
+    }
+
+    function confirmSend() {
+        Swal.fire({
+            title: 'Kirim Permintaan?',
+            text: "Status akan diubah menjadi 'Dikirim'.",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#0dcaf0',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Kirim'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('send-form').submit();
+            }
+        });
+    }
+
+    function confirmDone() {
+        Swal.fire({
+            title: 'Selesaikan Permintaan?',
+            text: "Status akan diubah menjadi 'Selesai' dan stok akan ditambahkan.",
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Selesaikan'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('done-form').submit();
+            }
+        });
+    }
+</script>
