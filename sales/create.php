@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     Add Product
                                 </button>
 
-                                <h5>Grand Total: <span id="grand-total">Rp. 0</span> </h5>
+                                <h5>Grand Total: <span id="grand-total">Rp 0</span> </h5>
                             </div>
 
                             <button type="submit" class="btn btn-primary">
@@ -259,7 +259,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
 
-        document.getElementById('grand-total').textContent = 'Rp. ' + grandTotal;
+        document.getElementById('grand-total').textContent = 'Rp ' + grandTotal;
     }
 </script>
 
