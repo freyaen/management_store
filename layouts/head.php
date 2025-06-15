@@ -11,8 +11,8 @@ function getDomainUrl() {
 
 $base = getDomainUrl(); // untuk kemudahan penggunaan di bawah
 
-function isActive($path = '', $index = '') {
-    if($index != '') return 'active';
+function isActive($path = '', $index = false) {
+    if(!$index) return 'active';
     $currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
     if ($path == '') {
         return $currentPath === '' ? 'active' : '';
