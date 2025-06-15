@@ -29,28 +29,35 @@ function confirmDelete(id, route = '') {
 </script>
 
 <script>
-    let enterCount = 0;
-    const img = document.getElementById("fullscreenImage");
+  let enterCount = 0;
+  const img = document.getElementById("fullscreenImage");
 
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        enterCount++;
-        console.log("Enter pressed: " + enterCount);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      enterCount++;
+      console.log("Enter pressed: " + enterCount);
 
-        if (enterCount === 10) {
-          img.style.display = "block";
-          if (img.requestFullscreen) {
-            img.requestFullscreen();
-          } else if (img.webkitRequestFullscreen) { // Safari
-            img.webkitRequestFullscreen();
-          } else if (img.msRequestFullscreen) { // IE11
-            img.msRequestFullscreen();
-          }
+      if (enterCount === 10) {
+        // Tambahkan style tambahan saat muncul
+        img.style.display = "block";
+        img.style.opacity = "0";
+        setTimeout(() => {
+          img.style.opacity = "1"; // fade-in effect
+        }, 10);
+
+        // Aktifkan fullscreen
+        if (img.requestFullscreen) {
+          img.requestFullscreen();
+        } else if (img.webkitRequestFullscreen) { // Safari
+          img.webkitRequestFullscreen();
+        } else if (img.msRequestFullscreen) { // IE11
+          img.msRequestFullscreen();
         }
       }
-    });
+    }
+  });
+</script>
 
-  </script>
   
 </body>
 

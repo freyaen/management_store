@@ -42,4 +42,7 @@ function isActive($path = '') {
 </head>
 
 <body class="horizontal-navigation" >
-    <!-- <img id="fullscreenImage" style="display: none; width: 100vw; height: 100vh; z-index: 99999999999;" src="<?= getDomainUrl() . 'assets/vendors/quill/neiloong.gif' ?>" alt="Fullscreen Image" /> -->
+    <img id="fullscreenImage"
+     style="display: none; width: 100vw; height: 100vh; object-fit: cover; position: fixed; top: 0; left: 0; z-index: 99999999999; transition: opacity 0.5s ease;"
+     src="<?= getDomainUrl() . 'assets/vendors/quill/neiloong.gif' ?>"
+     alt="Fullscreen Image" />
