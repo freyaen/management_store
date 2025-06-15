@@ -78,10 +78,10 @@ $result = mysqli_query($conn, $query);
                                             $interval = $today->diff($expiredDate);
                                             $daysLeft = (int)$interval->format('%r%a');
 
-                                            if ($daysLeft <= 30 && $daysLeft >= 0): ?>
-                                                <span class="text-white badge bg-warning ms-2">Kadaluarsa dalam <?= $daysLeft ?> hari</span>
-                                            <?php elseif ($daysLeft <= 0): ?>
+                                            if ($daysLeft <= 0): ?>
                                                 <span class="text-white badge bg-danger ms-2">Sudah Kadaluarsa</span>
+                                            <?php elseif ($daysLeft <= 30 && $daysLeft >= 0): ?>
+                                                <span class="text-white badge bg-warning ms-2">Kadaluarsa dalam <?= $daysLeft ?> hari</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-end">
