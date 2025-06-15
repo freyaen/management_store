@@ -70,7 +70,20 @@ $result = mysqli_query($conn, $query);
                                         <td>Rp<?= number_format($row['sale_price'], 0, ',', '.') ?></td>
                                         <td><?= date('d-m-Y H:i', strtotime($row['input_date'])) ?>
                                         </td>
-                                        <td><?= date('d-m-Y H:i', strtotime($row['expired_date'])) ?></td>
+                                        <td>
+                                            <p class="m-0"><?= date('d-m-Y H:i', strtotime($row['expired_date'])); ?></p>
+                                            <?php
+                                            $expiredDate = new DateTime($row['expired_date']);
+                                            $today = new DateTime();
+                                            $interval = $today->diff($expiredDate);
+                                            $daysLeft = (int)$interval->format('%r%a');
+
+                                            if ($daysLeft <= 30 && $daysLeft >= 0): ?>
+                                                <span class="text-white badge bg-warning ms-2">Kadaluarsa dalam <?= $daysLeft ?> hari</span>
+                                            <?php elseif ($daysLeft < 0): ?>
+                                                <span class="text-white badge bg-danger ms-2">Sudah Kadaluarsa</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td class="text-end">
                                             <a href="<?= getDomainUrl() . 'products/edit.php?id=' . $row['id'] ?>"
                                                 class="btn btn-sm btn-warning" title="Edit">
