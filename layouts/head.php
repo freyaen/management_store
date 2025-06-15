@@ -11,13 +11,16 @@ function getDomainUrl() {
 
 $base = getDomainUrl(); // untuk kemudahan penggunaan di bawah
 
-function isActive($path = '', $index = false) {
-    if($index == true) return 'active';
+function isActive($path = '') {
     $currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-    if ($path == '') {
-        return $currentPath === '' ? 'active' : '';
+
+    // Jika path yang dicek adalah root dashboard
+    if ($path === '') {
+        return $currentPath === '' || $currentPath === 'index.php' ? 'active' : '';
     }
-    return strpos($currentPath, $path) !== false ? 'active' : '';
+
+    // Untuk path lain
+    return strpos($currentPath, trim($path, '/')) !== false ? 'active' : '';
 }
 
 ?>

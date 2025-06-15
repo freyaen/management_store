@@ -16,7 +16,7 @@ $userRole = $_COOKIE['role_id'] ?? 0;
 
             <!-- Dashboard -->
             <li>
-                <a class="<?= isActive('', true) ?>" href="<?= getDomainUrl() ?>">
+                <a class="<?= isActive('') ?>" href="<?= getDomainUrl() ?>">
                     <span class="nav-link-icon">
                         <i class="bx bx-home"></i>
                     </span>
