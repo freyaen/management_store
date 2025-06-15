@@ -160,7 +160,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         class="text-white badge 
                                         <?= $request['payment_status'] == 'belum dibayar' ? 'bg-danger' : 'bg-success' ?>">
                                         <?= $paymentText[$request['payment_status']] ?>
-                                    </span>
+                                    </span> <br/><br/>
+
+                                    <?php 
+                                    // Tampilkan tombol jika status disetujui atau setelahnya
+                                    $showInvoiceButton = in_array($request['request_status'], ['disetujui', 'dikirim', 'selesai']);
+                                    ?>
+                                        <?php if ($showInvoiceButton): ?>
+                                        <a href="invoice.php?id=<?= $id ?>" target="_blank" class="btn btn-danger w-100">
+                                            </i> Lihat Invoice
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                                 <?php if ($request['request_status'] == 'ditolak'): ?>
                                 <div class="mb-2">
@@ -233,15 +243,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <?php if ($userRole == 2 && $request['request_status'] === 'disetujui' && $request['payment_status'] === 'belum dibayar'): ?>
                                 <!-- PEMBAYARAN -->
                                 <div class="col-md-6 mb-3 d-flex">
-                                    <?php 
-                                    // Tampilkan tombol jika status disetujui atau setelahnya
-                                    $showInvoiceButton = in_array($request['request_status'], ['disetujui', 'dikirim', 'selesai']);
-                                    ?>
-                                        <?php if ($showInvoiceButton): ?>
-                                        <a href="invoice.php?id=<?= $id ?>" target="_blank" class="btn btn-danger ">
-                                            </i> Lihat Invoice
-                                        </a>
-                                    <?php endif; ?>
                                     <form id="pay-form" method="POST" class="ml-2">
                                         <input type="hidden" name="action" value="pembayaran">
                                         <input type="hidden" name="payment_status" value="sudah dibayar">
