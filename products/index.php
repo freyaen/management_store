@@ -1,6 +1,7 @@
 <?php
-include '../config/database.php';
+include __DIR__  . '/../config/middleware.php';
 include '../layouts/head.php';
+include '../config/database.php';
 
 // Ambil data produk + kategori
 $query = "SELECT p.*, c.name AS category_name 

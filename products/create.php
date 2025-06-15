@@ -1,5 +1,6 @@
-<?php
-include '../layouts/head.php';
+<?php 
+include __DIR__  . '/../config/middleware.php';
+include 'layouts/head.php';
 include '../config/database.php';
 
 // Ambil data kategori untuk select option

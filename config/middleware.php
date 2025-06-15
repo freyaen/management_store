@@ -1,27 +1,15 @@
 <?php
-// Skip authentication for login page
-$currentFile = basename($_SERVER['SCRIPT_NAME']);
-if ($currentFile === 'login.php') {
-    exit;
-}
-
-// Validate session existence
 if (!isset($_COOKIE['user_id'])) {
-    // Ensure no output before header
-    if (headers_sent()) {
-        die("Redirect failed - headers already sent");
-    }
+    // Determine protocol (http/https)
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     
-    // Use absolute URL for redirect
-    $loginUrl = getDomainUrl() . "login.php";
-    header("Location: $loginUrl");
-    exit;
-}
-
-// Validate session integrity (add this)
-$user_id = $_COOKIE['user_id'];
-if (!is_numeric($user_id)) {
-    setcookie('user_id', '', time() - 3600, '/');
-    header("Location: " . getDomainUrl() . "login.php?error=invalid_session");
+    // Get server host
+    $host = $_SERVER['HTTP_HOST'];
+    
+    // Construct absolute URL
+    $redirect_url = "{$protocol}://{$host}/login.php";
+    
+    // Redirect and exit
+    header("Location: $redirect_url");
     exit;
 }
