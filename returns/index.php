@@ -32,9 +32,11 @@ $returns = mysqli_query($conn, "
                     <div class="card-body">
                         <div class="card-title d-flex justify-content-between align-items-center mb-3">
                             <h5 class="m-0">Return List</h5>
+                            <?php if($userRole == 2): ?>
                             <a href="<?= getDomainUrl() . 'returns/create.php' ?>" class="btn btn-primary">
                                 Create Return
                             </a>
+                            <?php endif; ?>
                         </div>
 
                         <div class="table-responsive">

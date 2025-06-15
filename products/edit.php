@@ -1,6 +1,6 @@
 <?php 
 include __DIR__  . '/../config/middleware.php';
-include 'layouts/head.php';
+include '../layouts/head.php';
 include '../config/database.php';
 
 $id = $_GET['id'] ?? null;
