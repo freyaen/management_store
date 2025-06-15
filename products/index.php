@@ -80,7 +80,7 @@ $result = mysqli_query($conn, $query);
 
                                             if ($daysLeft <= 30 && $daysLeft >= 0): ?>
                                                 <span class="text-white badge bg-warning ms-2">Kadaluarsa dalam <?= $daysLeft ?> hari</span>
-                                            <?php elseif ($daysLeft < 0): ?>
+                                            <?php elseif ($daysLeft <= 0): ?>
                                                 <span class="text-white badge bg-danger ms-2">Sudah Kadaluarsa</span>
                                             <?php endif; ?>
                                         </td>
